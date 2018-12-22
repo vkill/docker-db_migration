@@ -1,5 +1,4 @@
-/db/
-!/db/.keep
+/db/migrate/*.rb
 !/db/migrate/.keep
 
 /test/fixtures/
