@@ -9,6 +9,7 @@ Bundler.require(:default)
 require 'ostruct'
 require 'pathname'
 require 'yaml'
+require 'erb'
 
 Rails = OpenStruct.new
 root = Pathname.new(File.expand_path('..', __FILE__))
@@ -21,7 +22,7 @@ end
 
 include ActiveRecord::Tasks
 DatabaseTasks.env = 'production'
-DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
+DatabaseTasks.database_configuration = YAML.load(ERB.new(File.read(root.join('config/database.yml').to_s)).result)
 DatabaseTasks.db_dir = root.join('db').to_s
 DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
 DatabaseTasks.seed_loader = SeedLoader.new
@@ -29,7 +30,19 @@ DatabaseTasks.root = root
 
 #
 namespace :db do
-  task :migrate do
+  task :load_config do
+    ActiveRecord::Base.configurations       = DatabaseTasks.database_configuration
+    ActiveRecord::Migrator.migrations_paths = DatabaseTasks.migrations_paths
+  end
+
+  desc "Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
+  task :migrate, :load_config do
     DatabaseTasks.migrate
+  end
+
+  desc "Rolls the schema back to the previous version (specify steps w/ STEP=n)."
+  task rollback: :load_config do
+    step = ENV["STEP"] ? ENV["STEP"].to_i : 1
+    ActiveRecord::Base.connection.migration_context.rollback(step)
   end
 end
