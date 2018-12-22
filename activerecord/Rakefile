@@ -29,20 +29,17 @@ DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
 DatabaseTasks.seed_loader = SeedLoader.new
 DatabaseTasks.root = root
 
+DatabaseTasks.create_current
+
 #
 namespace :db do
-  task :load_config do
-    ActiveRecord::Base.configurations       = DatabaseTasks.database_configuration
-    ActiveRecord::Migrator.migrations_paths = DatabaseTasks.migrations_paths
-  end
-
   desc "Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
-  task migrate: [:load_config] do
+  task :migrate do
     DatabaseTasks.migrate
   end
 
   desc "Rolls the schema back to the previous version (specify steps w/ STEP=n)."
-  task rollback: [:load_config] do
+  task :rollback do
     step = ENV["STEP"] ? ENV["STEP"].to_i : 1
     ActiveRecord::Base.connection.migration_context.rollback(step)
   end

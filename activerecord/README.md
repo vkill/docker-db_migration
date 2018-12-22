@@ -5,5 +5,5 @@ https://edgeguides.rubyonrails.org/configuring.html#connection-preference
 ## Usage
 
 ```
-postgresql://localhost/blog_development?pool=5 rake db:migrate
+DATABASE_URL=postgresql://localhost/blog_development?pool=5 rake db:migrate
 ```
