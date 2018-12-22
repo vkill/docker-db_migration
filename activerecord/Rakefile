@@ -9,6 +9,7 @@ Bundler.require(:default)
 require 'ostruct'
 require 'pathname'
 require 'yaml'
+require 'active_record'
 
 Rails = OpenStruct.new
 root = Pathname.new(File.expand_path('..', __FILE__))
