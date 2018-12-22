@@ -1,4 +1,4 @@
-## Ref
+## Configure database.yml
 
 https://edgeguides.rubyonrails.org/configuring.html#connection-preference
 

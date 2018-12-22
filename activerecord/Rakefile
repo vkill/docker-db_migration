@@ -6,6 +6,8 @@ require 'bundler/setup'
 Bundler.require(:default)
 
 #
+# https://github.com/rails/rails/blob/master/activerecord/lib/active_record/tasks/database_tasks.rb
+#
 require 'ostruct'
 require 'pathname'
 require 'yaml'
@@ -24,7 +26,9 @@ end
 
 include ActiveRecord::Tasks
 DatabaseTasks.env = env
-DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
+if File.exists?(root.join('config/database.yml').to_s)
+  DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
+end
 DatabaseTasks.db_dir = root.join('db').to_s
 DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
 DatabaseTasks.seed_loader = SeedLoader.new
