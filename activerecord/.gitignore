@@ -1,3 +1,6 @@
+/db/*.sqlite3
+/db/*.sqlite
+
 /db/migrate/*.rb
 !/db/migrate/.keep
 
