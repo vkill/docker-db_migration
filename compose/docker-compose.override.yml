@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  db-migration:
 
 volumes:
   db_migration_db:
