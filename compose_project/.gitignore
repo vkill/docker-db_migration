@@ -1,0 +1,6 @@
+/.env
+
+/ansible_playbook_*.retry
+
+/ansible_hosts
+/ansible_var_prepare.yml

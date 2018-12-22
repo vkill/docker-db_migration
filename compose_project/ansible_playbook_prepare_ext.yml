@@ -1,0 +1,32 @@
+---
+- name: Docker db_migration prepare ext
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Mkdir dirs
+      file:
+        state: directory
+        path: "{{ db_migration_root_dir }}/{{ item }}"
+        mode: 0755
+      with_items:
+        - compose
+        - compose_project
+
+    - name: Copy files
+      template:
+        src: "{{ item }}"
+        dest: "{{ db_migration_root_dir }}/compose_project/{{ item }}"
+        mode: 0644
+      with_items:
+        - ../compose/docker-compose.yml
+        - ../compose/docker-compose.override.yml
+        - docker-compose.yml
+
+    - name: Copy scripts
+      template:
+        src: "{{ item }}"
+        dest: "{{ db_migration_root_dir }}/compose_project/{{ item }}"
+        mode: 0755
+      with_items:
+        - docker-compose.sh

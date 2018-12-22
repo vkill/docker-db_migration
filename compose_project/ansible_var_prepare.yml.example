@@ -1,0 +1,7 @@
+---
+db_migration_root_dir: "/data/x_db_migration"
+
+db_migration_dotenv_dir: "{{ db_migration_root_dir }}/compose_project"
+
+db_migration_db_dir: "{{ db_migration_root_dir }}/db_migration_db"
+db_migration_config_dir: "{{ db_migration_root_dir }}/db_migration_config"
