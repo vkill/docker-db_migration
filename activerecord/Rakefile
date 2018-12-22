@@ -13,6 +13,8 @@ require 'yaml'
 Rails = OpenStruct.new
 root = Pathname.new(File.expand_path('..', __FILE__))
 Rails.root = root
+env = ActiveSupport::StringInquirer.new('production')
+Rails.env = env
 
 class SeedLoader
   def load_seed
@@ -20,7 +22,7 @@ class SeedLoader
 end
 
 include ActiveRecord::Tasks
-DatabaseTasks.env = 'production'
+DatabaseTasks.env = env
 DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
 DatabaseTasks.db_dir = root.join('db').to_s
 DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
@@ -35,12 +37,12 @@ namespace :db do
   end
 
   desc "Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
-  task :migrate, :load_config do
+  task migrate: [:load_config] do
     DatabaseTasks.migrate
   end
 
   desc "Rolls the schema back to the previous version (specify steps w/ STEP=n)."
-  task rollback: :load_config do
+  task rollback: [:load_config] do
     step = ENV["STEP"] ? ENV["STEP"].to_i : 1
     ActiveRecord::Base.connection.migration_context.rollback(step)
   end
