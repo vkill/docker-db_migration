@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+volumes:
+  db_migration_db:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DB_MIGRATION_DB_DIR:-/data/x_db_migration/db_migration_db}
+      o: bind
+  db_migration_config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DB_MIGRATION_CONFIG_DIR:-/data/x_db_migration/db_migration_config}
+      o: bind

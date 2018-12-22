@@ -30,7 +30,11 @@ if File.exists?(root.join('config/database.yml').to_s)
   DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
 end
 DatabaseTasks.db_dir = root.join('db').to_s
-DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
+migrations_paths = []
+if File.exists?(root.join('db/migrate').to_s)
+  migrations_paths.push root.join('db/migrate').to_s
+end
+DatabaseTasks.migrations_paths = migrations_paths
 DatabaseTasks.seed_loader = SeedLoader.new
 DatabaseTasks.root = root
 

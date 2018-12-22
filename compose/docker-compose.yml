@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db-migration:
+    image: "${DB_MIGRATION_DOCKER_TAG:-vkill/db_migration_activerecord:5.2-alpine}"
+    volumes:
+      - db_migration_db:/usr/src/app/db
+      - db_migration_config:/usr/src/app/config
+    environment:
+      DATABASE_URL: ${DB_MIGRATION_DATABASE_URL:-postgresql://postgres:@localhost:5432/test?pool=1}
+    pid: host
+
+volumes:
+  db_migration_db:
+  db_migration_config:

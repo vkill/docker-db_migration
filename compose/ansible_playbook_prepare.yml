@@ -1,0 +1,44 @@
+---
+- name: Docker db_migration prepare
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Ensure db_migration_db_dir exists
+      file:
+        state: directory
+        path: "{{ db_migration_db_dir }}"
+        group: "docker"
+        mode: 0775
+
+    - name: Ensure db_migration_config_dir exists
+      file:
+        state: directory
+        path: "{{ db_migration_config_dir }}"
+        group: "docker"
+        mode: 0755
+
+    - name: Ensure db_migration_dotenv_dir exists
+      file:
+        state: directory
+        path: "{{ db_migration_dotenv_dir }}"
+        mode: 0755
+
+    - name: Touch .env
+      file:
+        path: "{{ db_migration_dotenv_dir }}/.env"
+        state: touch
+        mode: 0644
+        access_time: preserve
+        modification_time: preserve
+
+    - name: Update .env
+      lineinfile:
+        path: "{{ db_migration_dotenv_dir }}/.env"
+        regexp: "^{{ item.key }}="
+        line: '{{ item.key }}={{ item.value }}'
+      with_items:
+        - key: "DB_MIGRATION_DB_DIR"
+          value: "{{ db_migration_db_dir }}"
+        - key: "DB_MIGRATION_CONFIG_DIR"
+          value: "{{ db_migration_config_dir }}"
