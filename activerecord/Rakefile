@@ -9,7 +9,6 @@ Bundler.require(:default)
 require 'ostruct'
 require 'pathname'
 require 'yaml'
-require 'erb'
 
 Rails = OpenStruct.new
 root = Pathname.new(File.expand_path('..', __FILE__))
@@ -22,7 +21,7 @@ end
 
 include ActiveRecord::Tasks
 DatabaseTasks.env = 'production'
-DatabaseTasks.database_configuration = YAML.load(ERB.new(File.read(root.join('config/database.yml').to_s)).result)
+DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
 DatabaseTasks.db_dir = root.join('db').to_s
 DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
 DatabaseTasks.seed_loader = SeedLoader.new
