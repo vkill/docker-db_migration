@@ -1,7 +1,3 @@
-## Configure
-
-Ref https://edgeguides.rubyonrails.org/configuring.html#connection-preference
-
 ## Usage
 
 ```

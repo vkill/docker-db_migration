@@ -1,3 +1,37 @@
-require_relative 'config/application'
+#
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('Gemfile', __dir__)
+require 'bundler/setup'
 
-Rails.application.load_tasks
+#
+Bundler.require(:default)
+
+require 'active_record'
+
+#
+require 'ostruct'
+require 'pathname'
+require 'yaml'
+
+Rails = OpenStruct.new
+root = Pathname.new(File.expand_path('..', __FILE__))
+Rails.root = root
+
+class SeedLoader
+  def load_seed
+  end
+end
+
+include ActiveRecord::Tasks
+DatabaseTasks.env = 'production'
+DatabaseTasks.database_configuration = YAML.load_file(root.join('config/database.yml').to_s)
+DatabaseTasks.db_dir = root.join('db').to_s
+DatabaseTasks.migrations_paths = [root.join('db/migrate').to_s]
+DatabaseTasks.seed_loader = SeedLoader.new
+DatabaseTasks.root = root
+
+#
+task :db do
+  task :migrate do
+    DatabaseTasks.migrate
+  end
+end

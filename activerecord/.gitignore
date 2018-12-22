@@ -1,0 +1,5 @@
+/db/
+!/db/.keep
+
+/test/fixtures/
+!/test/fixtures/.keep
