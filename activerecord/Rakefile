@@ -5,8 +5,6 @@ require 'bundler/setup'
 #
 Bundler.require(:default)
 
-require 'active_record'
-
 #
 require 'ostruct'
 require 'pathname'
@@ -30,7 +28,7 @@ DatabaseTasks.seed_loader = SeedLoader.new
 DatabaseTasks.root = root
 
 #
-task :db do
+namespace :db do
   task :migrate do
     DatabaseTasks.migrate
   end
