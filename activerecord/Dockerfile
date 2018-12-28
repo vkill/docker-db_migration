@@ -1,4 +1,4 @@
-FROM ruby:2.6-rc-alpine
+FROM ruby:2.6-alpine
 
 MAINTAINER vkill <vkill.net@gmail.com>
 
