@@ -19,11 +19,6 @@ Rails.root = root
 env = ActiveSupport::StringInquirer.new('production')
 Rails.env = env
 
-class SeedLoader
-  def load_seed
-  end
-end
-
 include ActiveRecord::Tasks
 DatabaseTasks.env = env
 if File.exists?(root.join('config/database.yml').to_s)
@@ -35,11 +30,18 @@ if File.exists?(root.join('db/migrate').to_s)
   migrations_paths.push root.join('db/migrate').to_s
 end
 DatabaseTasks.migrations_paths = migrations_paths
-DatabaseTasks.seed_loader = SeedLoader.new
+DatabaseTasks.seed_loader = Class.new{}
+DatabaseTasks.seed_loader.class_eval <<-RUBY
+  def self.load_seed
+    load("#{root.join('db/seeds.rb')}")
+  end
+RUBY
 DatabaseTasks.root = root
 
 DatabaseTasks.create_current
 
+#
+# https://github.com/rails/rails/blob/master/activerecord/lib/active_record/railties/databases.rake
 #
 namespace :db do
   desc "Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
@@ -51,5 +53,10 @@ namespace :db do
   task :rollback do
     step = ENV["STEP"] ? ENV["STEP"].to_i : 1
     ActiveRecord::Base.connection.migration_context.rollback(step)
+  end
+
+  desc "Loads the seed data from db/seeds.rb"
+  task :seed do
+    DatabaseTasks.load_seed
   end
 end
